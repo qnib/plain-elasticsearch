@@ -22,7 +22,6 @@ ADD etc/consul-templates/elasticsearch/elasticsearch.yml.ctmpl \
     etc/consul-templates/elasticsearch/logging.yml.ctmpl \
     /etc/consul-templates/elasticsearch/
 ADD opt/qnib/elasticsearch/bin/start.sh \
-    opt/qnib/elasticsearch/bin/stop.sh \
     opt/qnib/elasticsearch/bin/register.sh \
     opt/qnib/elasticsearch/bin/healthcheck.sh \
     /opt/qnib/elasticsearch/bin/

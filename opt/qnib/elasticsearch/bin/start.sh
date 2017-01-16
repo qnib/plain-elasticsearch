@@ -1,4 +1,4 @@
-#!/usr/local/bin/dumb-init /bin/bash
+#!/bin/bash
 set -ex
 
 function wait_es {
