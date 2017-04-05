@@ -1,14 +1,13 @@
 version: '3'
 services:
   node:
-    image: qnib/plain-elasticsearch@sha256:ae140a3f3248ec90c8d3a7c67d6c448c796ca56f0e25c0b82caa7848450f0d2f
+    image: qnib/plain-elasticsearch@sha256:25fe9086b2b159e662a10740c55ac7de7c410b2b3ba449e33f9c3849b4794bbf
     hostname: '{{.Service.Name}}.{{.Task.Slot}}.{{.Task.ID}}'
     environment:
       SWARM_SERVICE_NAME: '{{.Service.Name}}'
       SWARM_TASK_SLOT: '{{.Task.Slot}}'
       SWARM_TASK_ID: '{{.Task.ID}}'
       SWARM_NODE_ID: '{{.Node.ID}}'
-      ENTRY_USER: elastic
     ports:
      - "9200:9200"
     deploy:
