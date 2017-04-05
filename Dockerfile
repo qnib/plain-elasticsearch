@@ -65,6 +65,7 @@ VOLUME ["/usr/share/elasticsearch/logs", "/usr/share/elasticsearch/data/"]
 COPY opt/qnib/entry/* /opt/qnib/entry/
 COPY opt/qnib/elasticsearch/bin/* \
      /opt/qnib/elasticsearch/bin/
-COPY opt/qnib/elasticsearch/etc/elasticsearch.yml \
-     /opt/qnib/elasticsearch/etc/elasticsearch.yml
-#ENV ENTRY_USER=elastic
+COPY opt/qnib/elasticsearch/etc/* \
+     /opt/qnib/elasticsearch/etc/
+ENV ENTRY_USER=elastic
+RUN /usr/share/elasticsearch/bin/elasticsearch-plugin install discovery-file
