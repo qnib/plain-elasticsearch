@@ -101,5 +101,3 @@ http.cors.enabled: true
 # ------------------------------- NODE TYPE ------------------------------------
 node.data: true
 node.master: true
-
-node.max_local_storage_nodes: 2

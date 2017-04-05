@@ -1,27 +1,15 @@
 version: '3'
 services:
-  master:
-    image: qnib/plain-elasticsearch@sha256:5887dc77b8c558469b05e491e2679b393c06e68464a6f85af6c1e05d54ea02bf
+  node:
+    image: qnib/plain-elasticsearch@sha256:3ad5c1a7db254c461912b8d44748d11204584bebdf6e9c904aa926fc8f9c64bd
+    hostname: '{{.Service.Name}}.{{.Task.Slot}}.{{.Task.ID}}'
+    environment:
+      SWARM_SERVICE_NAME: '{{.Service.Name}}'
+      SWARM_TASK_SLOT: '{{.Task.Slot}}'
+      SWARM_TASK_ID: '{{.Task.ID}}'
+      SWARM_NODE_ID: '{{.Node.ID}}'
     ports:
      - "9200:9200"
-     - "9300:9300"
-    ulimits:
-      nproc: 65535
-      nofile:
-        soft: 83968000
-        hard: 83968000
-      memlock:
-        soft: 68719476736
-        hard: 68719476736
-#  data:
-#    image: qnib/plain-elasticsearch@sha256:cccf6ebdc85094d981c6417601105c964046ef776cad6ba46b93cd54affb8dc6
-#    ulimits:
-#      nproc: 65535
-#      nofile:
-#        soft: 83968000
-#        hard: 83968000
-#      memlock:
-#        soft: 68719476736
-#        hard: 68719476736
-#    environment:
-#      ES_ZEN_HOSTS: elasticsearch_master
+    deploy:
+      #mode: global
+      replicas: 2
