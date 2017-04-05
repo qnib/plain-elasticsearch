@@ -101,3 +101,6 @@ http.cors.enabled: true
 # ------------------------------- NODE TYPE ------------------------------------
 node.data: true
 node.master: true
+
+# ------------------------------ discovery
+discovery.zen.hosts_provider: file

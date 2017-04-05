@@ -1,15 +1,16 @@
 version: '3'
 services:
   node:
-    image: qnib/plain-elasticsearch@sha256:3ad5c1a7db254c461912b8d44748d11204584bebdf6e9c904aa926fc8f9c64bd
+    image: qnib/plain-elasticsearch@sha256:ae140a3f3248ec90c8d3a7c67d6c448c796ca56f0e25c0b82caa7848450f0d2f
     hostname: '{{.Service.Name}}.{{.Task.Slot}}.{{.Task.ID}}'
     environment:
       SWARM_SERVICE_NAME: '{{.Service.Name}}'
       SWARM_TASK_SLOT: '{{.Task.Slot}}'
       SWARM_TASK_ID: '{{.Task.ID}}'
       SWARM_NODE_ID: '{{.Node.ID}}'
+      ENTRY_USER: elastic
     ports:
      - "9200:9200"
     deploy:
       #mode: global
-      replicas: 2
+      replicas: 1
