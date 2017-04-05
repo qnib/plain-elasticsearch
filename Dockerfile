@@ -1,80 +1,62 @@
-FROM qnib/alplain-openjre8
+FROM qnib/dplain-openjdk8
 
 
 # ensure elastic user exists
-RUN addgroup -S elastic && adduser -S -G elastic elastic
+RUN groupadd elastic \
+ && useradd -g elastic elastic
 
-# grab su-exec for easy step-down from root
-# and bash for "bin/elasticsearch" among others
-RUN apk add --no-cache 'su-exec>=0.2' bash
-
-# https://artifacts.elastic.co/GPG-KEY-elasticsearch
-ENV GPG_KEY 46095ACC8548582C1A2699A9D27D666CD88E42B4
-
-WORKDIR /usr/share/elasticsearch
-ENV PATH /usr/share/elasticsearch/bin:$PATH
-
-ENV ELASTICSEARCH_VERSION 5.3.0
-ENV ELASTICSEARCH_TARBALL="https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.3.0.tar.gz" \
-	ELASTICSEARCH_TARBALL_ASC="https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.3.0.tar.gz.asc" \
-	ELASTICSEARCH_TARBALL_SHA1="9273fdecb2251755887f1234d6cfcc91e44a384d"
 
 RUN set -ex; \
+# https://artifacts.elastic.co/GPG-KEY-elasticsearch
+	key='46095ACC8548582C1A2699A9D27D666CD88E42B4'; \
+	export GNUPGHOME="$(mktemp -d)"; \
+	gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$key"; \
+	gpg --export "$key" > /etc/apt/trusted.gpg.d/elastic.gpg; \
+	rm -r "$GNUPGHOME"; \
+	apt-key list
+
+# https://www.elastic.co/guide/en/elasticsearch/reference/current/setup-repositories.html
+# https://www.elastic.co/guide/en/elasticsearch/reference/5.0/deb.html
+RUN set -x \
+ && apt-get update \
+ && apt-get install -y curl nmap jq vim sed \
+ && apt-get install -y --no-install-recommends apt-transport-https && rm -rf /var/lib/apt/lists/* \
+ && echo 'deb https://artifacts.elastic.co/packages/5.x/apt stable main' > /etc/apt/sources.list.d/elasticsearch.list
+
+ENV ELASTICSEARCH_VERSION 5.3.0
+ENV ELASTICSEARCH_DEB_VERSION 5.3.0
+
+RUN set -x \
 	\
-	apk add --no-cache --virtual .fetch-deps \
-		ca-certificates \
-		gnupg \
-		openssl \
-		tar \
-	; \
+# don't allow the package to install its sysctl file (causes the install to fail)
+# Failed to write '262144' to '/proc/sys/vm/max_map_count': Read-only file system
+	&& dpkg-divert --rename /usr/lib/sysctl.d/elasticsearch.conf \
 	\
-	wget -qO elasticsearch.tar.gz "$ELASTICSEARCH_TARBALL"; \
-	\
-	if [ "$ELASTICSEARCH_TARBALL_SHA1" ]; then \
-		echo "$ELASTICSEARCH_TARBALL_SHA1 *elasticsearch.tar.gz" | sha1sum -c -; \
-	fi; \
-	\
-	if [ "$ELASTICSEARCH_TARBALL_ASC" ]; then \
-		wget -qO elasticsearch.tar.gz.asc "$ELASTICSEARCH_TARBALL_ASC"; \
-		export GNUPGHOME="$(mktemp -d)"; \
-		gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$GPG_KEY"; \
-		gpg --batch --verify elasticsearch.tar.gz.asc elasticsearch.tar.gz; \
-		rm -r "$GNUPGHOME" elasticsearch.tar.gz.asc; \
-	fi; \
-	\
-	tar -xf elasticsearch.tar.gz --strip-components=1; \
-	rm elasticsearch.tar.gz; \
-	\
-	apk del .fetch-deps; \
-	\
-	mkdir -p ./plugins; \
-	for path in \
+	&& apt-get update \
+	&& apt-get install -y --no-install-recommends "elasticsearch=$ELASTICSEARCH_DEB_VERSION" \
+	&& rm -rf /var/lib/apt/lists/*
+
+ENV PATH /usr/share/elasticsearch/bin:$PATH
+
+WORKDIR /usr/share/elasticsearch
+
+RUN set -ex \
+	&& for path in \
 		./data \
 		./logs \
 		./config \
 		./config/scripts \
 	; do \
 		mkdir -p "$path"; \
-		chown -R elastic:elastic "$path"; \
-	done; \
-	\
-# we shouldn't need much RAM to test --version (default is 2gb, which gets Jenkins in trouble sometimes)
-	export ES_JAVA_OPTS='-Xms32m -Xmx32m'; \
-	if [ "${ELASTICSEARCH_VERSION%%.*}" -gt 1 ]; then \
-		elasticsearch --version; \
-	else \
-# elasticsearch 1.x doesn't support --version
-# but in 5.x, "-v" is verbose (and "-V" is --version)
-		elasticsearch -v; \
-	fi
+		chown -R elasticsearch:elasticsearch "$path"; \
+	done
+
 WORKDIR /
 
 ENV ES_DATA_NODE=true \
     ES_MASTER_NODE=true \
     ES_NET_HOST=0.0.0.0 \
-    ES_MLOCKALL=true \
-    ENTRY_USER=elastic
-RUN apk add --no-cache curl nmap jq vim sed
+    ES_MLOCKALL=true
 COPY opt/qnib/elasticsearch/index-registration/settings/*.json /opt/qnib/elasticsearch/index-registration/settings/
 HEALTHCHECK --interval=2s --retries=300 --timeout=1s \
   CMD /opt/qnib/elasticsearch/bin/healthcheck.sh
@@ -85,3 +67,4 @@ COPY opt/qnib/elasticsearch/bin/* \
      /opt/qnib/elasticsearch/bin/
 COPY opt/qnib/elasticsearch/etc/elasticsearch.yml \
      /opt/qnib/elasticsearch/etc/elasticsearch.yml
+#ENV ENTRY_USER=elastic
