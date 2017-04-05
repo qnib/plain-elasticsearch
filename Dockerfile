@@ -1,9 +1,9 @@
 FROM qnib/dplain-openjdk8
 
 
-# ensure elastic user exists
-RUN groupadd elastic \
- && useradd -g elastic elastic
+# ensure elasticsearch user exists
+RUN groupadd elasticsearch \
+ && useradd -g elasticsearch elasticsearch
 
 
 RUN set -ex; \
@@ -67,5 +67,5 @@ COPY opt/qnib/elasticsearch/bin/* \
      /opt/qnib/elasticsearch/bin/
 COPY opt/qnib/elasticsearch/etc/* \
      /opt/qnib/elasticsearch/etc/
-ENV ENTRY_USER=elastic
+ENV ENTRY_USER=elasticsearch
 RUN /usr/share/elasticsearch/bin/elasticsearch-plugin install discovery-file
