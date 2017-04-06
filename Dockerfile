@@ -62,8 +62,8 @@ ENV ES_DATA=true \
     ES_MASTER=true \
     ES_NET_HOST=0.0.0.0 \
     ES_MLOCKAciLL=true \
-    ES_HEAP_MAX=512m \
-    ES_HEAP_MIN=512m \
+    ES_HEAP_MAX=256m \
+    ES_HEAP_MIN=256m \
     ENTRY_USER=elasticsearch
 COPY opt/qnib/elasticsearch/index-registration/settings/*.json /opt/qnib/elasticsearch/index-registration/settings/
 COPY wait.sh /usr/local/bin/
