@@ -1,0 +1,5 @@
+#!/bin/bash
+
+ETH_ADDR=$(ip -o -4 addr |awk '/eth0.*24/{print $4}' |awk -F/ '{print $1}')
+echo "  >> s/[#]*network.host:.*/network.host: \[_local_, \"${ETH_ADDR}\"\]/"
+sed -i'' -e "s/[#]*network.host:.*/network.host: \[_local_, \"${ETH_ADDR}\"\]/" /usr/share/elasticsearch/config/elasticsearch.yml

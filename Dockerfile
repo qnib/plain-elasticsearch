@@ -21,10 +21,9 @@ RUN set -x \
  && apt-get update \
  && apt-get install -y curl nmap jq vim sed \
  && apt-get install -y --no-install-recommends apt-transport-https && rm -rf /var/lib/apt/lists/* \
- && echo 'deb https://artifacts.elastic.co/packages/5.x/apt stable main' > /etc/apt/sources.list.d/elasticsearch.list
-
-ENV ELASTICSEARCH_VERSION 5.3.0
-ENV ELASTICSEARCH_DEB_VERSION 5.3.0
+ && echo 'deb http://packages.elasticsearch.org/elasticsearch/2.x/debian stable main' > /etc/apt/sources.list.d/elasticsearch.list
+ENV ELASTICSEARCH_VERSION 2.4.4
+ENV ELASTICSEARCH_DEB_VERSION 2.4.4
 
 RUN set -x \
 	\
@@ -56,18 +55,21 @@ WORKDIR /
 ENV ES_DATA=true \
     ES_MASTER=true \
     ES_NET_HOST=0.0.0.0 \
-    ES_MLOCKAciLL=true \
+    ES_MLOCKALL=true \
+    ES_HEAP_SIZE=512m \
     ES_HEAP_MAX=512m \
-    ES_HEAP_MIN=512m
+    ES_HEAP_MIN=512m \
+    ENTRY_USER=elasticsearch \
+    ES_HOME=/usr/share/elasticsearch
 COPY opt/qnib/elasticsearch/index-registration/settings/*.json /opt/qnib/elasticsearch/index-registration/settings/
-#HEALTHCHECK --interval=2s --retries=300 --timeout=1s \
-#  CMD /opt/qnib/elasticsearch/bin/healthcheck.sh
+COPY wait.sh /usr/local/bin/
+HEALTHCHECK --interval=2s --retries=300 --timeout=1s \
+  CMD /opt/qnib/elasticsearch/bin/healthcheck.sh
 CMD ["elasticsearch"]
 VOLUME ["/usr/share/elasticsearch/logs", "/usr/share/elasticsearch/data/"]
+COPY opt/qnib/elasticsearch/bin/* /opt/qnib/elasticsearch/bin/
 COPY opt/qnib/entry/* /opt/qnib/entry/
-COPY opt/qnib/elasticsearch/bin/* \
-     /opt/qnib/elasticsearch/bin/
-COPY opt/qnib/elasticsearch/etc/* \
-     /opt/qnib/elasticsearch/etc/
-ENV ENTRY_USER=elasticsearch
-COPY wait.sh /usr/local/bin/
+COPY usr/share/elasticsearch/config/elasticsearch.yml \
+     usr/share/elasticsearch/config/logging.yml \
+     /usr/share/elasticsearch/config/
+RUN echo "gosu elasticsearch elasticsearch" >> /root/.bash_history
