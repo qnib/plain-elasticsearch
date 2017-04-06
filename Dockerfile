@@ -52,14 +52,16 @@ RUN set -ex \
 	done
 
 WORKDIR /
-
-ENV ES_DATA_NODE=true \
-    ES_MASTER_NODE=true \
+#RUN /usr/share/elasticsearch/bin/elasticsearch-plugin install discovery-file
+ENV ES_DATA=true \
+    ES_MASTER=true \
     ES_NET_HOST=0.0.0.0 \
-    ES_MLOCKALL=true
+    ES_MLOCKAciLL=true \
+    ES_HEAP_MAX=512m \
+    ES_HEAP_MIN=512m
 COPY opt/qnib/elasticsearch/index-registration/settings/*.json /opt/qnib/elasticsearch/index-registration/settings/
-HEALTHCHECK --interval=2s --retries=300 --timeout=1s \
-  CMD /opt/qnib/elasticsearch/bin/healthcheck.sh
+#HEALTHCHECK --interval=2s --retries=300 --timeout=1s \
+#  CMD /opt/qnib/elasticsearch/bin/healthcheck.sh
 CMD ["elasticsearch"]
 VOLUME ["/usr/share/elasticsearch/logs", "/usr/share/elasticsearch/data/"]
 COPY opt/qnib/entry/* /opt/qnib/entry/
@@ -68,4 +70,4 @@ COPY opt/qnib/elasticsearch/bin/* \
 COPY opt/qnib/elasticsearch/etc/* \
      /opt/qnib/elasticsearch/etc/
 ENV ENTRY_USER=elasticsearch
-RUN /usr/share/elasticsearch/bin/elasticsearch-plugin install discovery-file
+COPY wait.sh /usr/local/bin/
