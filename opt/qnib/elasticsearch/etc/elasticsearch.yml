@@ -103,4 +103,5 @@ node.data: true
 node.master: true
 
 # ------------------------------ discovery
-discovery.zen.hosts_provider: file
+#discovery.zen.hosts_provider: file
+discovery.zen.master_election.ignore_non_master_pings: true
