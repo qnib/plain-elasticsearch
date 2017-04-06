@@ -68,7 +68,7 @@ ENV ES_DATA=true \
 COPY opt/qnib/elasticsearch/index-registration/settings/*.json /opt/qnib/elasticsearch/index-registration/settings/
 COPY wait.sh /usr/local/bin/
 HEALTHCHECK --interval=2s --retries=300 --timeout=1s \
-  CMD /opt/qnib/elasticsearch/bin/healthcheck.sh
+  CMD /usr/local/bin/go-elastic-health
 CMD ["elasticsearch"]
 VOLUME ["/usr/share/elasticsearch/logs", "/usr/share/elasticsearch/data/"]
 COPY opt/qnib/elasticsearch/bin/* /opt/qnib/elasticsearch/bin/
