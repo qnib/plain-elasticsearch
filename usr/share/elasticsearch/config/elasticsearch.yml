@@ -1,0 +1,16 @@
+### Node
+node.name: master
+node.data: true
+node.master: true
+### Cluster
+cluster.name: ES_CLUSTER_NAME
+### Networking
+network.host: [_eth0_, _local_]
+
+
+# Allow CORS interface to be reached by the world
+http.host: 0.0.0.0
+http.cors.allow-origin: "/.*/"
+http.cors.enabled: true
+
+#discovery.zen.ping.unicast.hosts: ES_UNICASTS_HOSTS
