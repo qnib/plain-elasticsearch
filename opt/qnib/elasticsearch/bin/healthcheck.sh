@@ -2,7 +2,11 @@
 
 echoerr() { echo "$@" 1>&2; }
 
-CHECK_URL=http://127.0.0.1:9200
+if [[ -z $1 ]];then
+  CHECK_URL=http://127.0.0.1:9200
+else
+  CHECK_URL=http://$1:9200
+fi
 echo "curl -sI ${CHECK_URL}"
 curl -sI ${CHECK_URL}
 if [ $? -ne 0 ];then

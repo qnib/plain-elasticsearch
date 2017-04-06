@@ -52,7 +52,12 @@ RUN set -ex \
 	done
 
 WORKDIR /
-#RUN /usr/share/elasticsearch/bin/elasticsearch-plugin install discovery-file
+RUN apt-get update \
+ && apt-get install -y wget \
+ && wget -qO /usr/local/bin/go-elastic-health https://github.com/qnib/go-elastic-health/releases/download/v1.0.0/go-elastic-health_Linux \
+ && chmod +x /usr/local/bin/go-elastic-health \
+ && apt-get purge -y wget \
+ && rm -rf /var/lib/apt/lists/*
 ENV ES_DATA=true \
     ES_MASTER=true \
     ES_NET_HOST=0.0.0.0 \
