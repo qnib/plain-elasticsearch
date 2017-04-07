@@ -4,7 +4,7 @@ function loop_wait {
   while [ true ];do
     /usr/local/bin/go-elastic-health --host ${ES_UNICAST_HOSTS}
     if [[ $? == 0 ]];then
-      break
+      exit 0
     else
       sleep 1
       loop_wait
