@@ -5,14 +5,45 @@ services:
     ports:
       - "9200:9200"
       - "9300:9300"
+    deploy:
+      resources:
+        # Only one master for now
+        replicas: 1
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+      update_config:
+        parallelism: 1
+        delay: 15s
+      restart_policy:
+        condition: on-failure
     environment:
+      ES_HEAP_MAX: "256m"
+      ES_HEAP_MIN: "256m"
       ES_NODE_MASTER: "true"
       ES_NODE_DATA: "false"
   data:
     image: qnib/plain-elasticsearch
     deploy:
       replicas: 3
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+      update_config:
+        parallelism: 1
+        delay: 30s
+      restart_policy:
+        condition: on-failure
     environment:
+      ES_HEAP_MAX: "256m"
+      ES_HEAP_MIN: "256m"
       ES_NODE_MASTER: "false"
       ES_NODE_DATA: "true"
       ES_UNICAST_HOSTS: "es_master"
