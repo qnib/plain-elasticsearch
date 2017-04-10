@@ -4,14 +4,43 @@ Plain Docker image w/ elasticsearch which can be deployed as Docker Services.
 The image can be used as single container (Master/Data) deployment or in a distributed setup.
 
 
+## Single Image Service
 
+If you resources are limited (laptop), you should consider starting only one instance.
+
+```
+$ docker stack deploy -c docker-compose.yml es
+Creating network es_default
+Creating service es_master
+$ sleep ${DELAY} ; docker ps -f label=com.docker.stack.namespace=es --format '{{.Names}}\t{{.Image}}\t\t{{.Status}}'
+es_master.1.8ch3vysxxug64rivqptjl4xpt	qnib/plain-elasticsearch:latest		Up 58 seconds (healthy)
+$ curl -s http://localhost:9200/_cluster/health |jq .
+{
+  "cluster_name": "default",
+  "status": "green",
+  "timed_out": false,
+  "number_of_nodes": 1,
+  "number_of_data_nodes": 1,
+  "active_primary_shards": 0,
+  "active_shards": 0,
+  "relocating_shards": 0,
+  "initializing_shards": 0,
+  "unassigned_shards": 0,
+  "delayed_unassigned_shards": 0,
+  "number_of_pending_tasks": 0,
+  "number_of_in_flight_fetch": 0,
+  "task_max_waiting_in_queue_millis": 0,
+  "active_shards_percent_as_number": 100
+}
+$
+```
 
 ## Distributed Docker Services
 
 In a distributed setup (when `ES_UNICAST_HOSTS` is set), the data nodes are wait to start until the master cluster status is green.
 
 ```
-$ docker stack deploy --compose-file docker-compose.yml es
+$ docker stack deploy --compose-file docker-compose.yml.distributed es
 Creating network es_default
 Creating service es_data
 Creating service plain-elasticsearch_master
