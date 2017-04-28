@@ -93,4 +93,6 @@ COPY opt/qnib/entry/* /opt/qnib/entry/
 COPY usr/share/elasticsearch/config/elasticsearch.yml \
      usr/share/elasticsearch/config/log4j2.properties \
      /usr/share/elasticsearch/config/
+RUN wget -qO /usr/local/bin/gosu https://github.com/tianon/gosu/releases/download/1.10/gosu-amd64 \
+ && chmod +x /usr/local/bin/gosu 
 RUN echo "gosu elasticsearch elasticsearch" >> /root/.bash_history
