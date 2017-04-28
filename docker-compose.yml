@@ -22,3 +22,4 @@ services:
       ES_HEAP_MIN: "512m"
       ES_NODE_MASTER: "true"
       ES_NODE_DATA: "true"
+    command: wait.sh

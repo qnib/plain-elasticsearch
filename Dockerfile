@@ -3,11 +3,14 @@ FROM qnib/alplain-jdk8
 
 # ensure elasticsearch user exists
 RUN adduser -D -g elasticsearch elasticsearch
+ENV PATH /usr/share/elasticsearch/bin:$PATH
 
 ENV ELASTICSEARCH_VERSION 1.7.6
 ENV ELASTICSEARCH_TARBALL="https://download.elastic.co/elasticsearch/elasticsearch/elasticsearch-1.7.6.tar.gz" \
     ELASTICSEARCH_TARBALL_ASC="" \
     ELASTICSEARCH_TARBALL_SHA1="0b6ec9fe34b29e6adc4d8481630bf1f69cb04aa9"
+
+WORKDIR /usr/share/elasticsearch/
 RUN set -ex; \
 	\
 	apk add --no-cache --virtual .fetch-deps \
@@ -56,10 +59,6 @@ RUN set -ex; \
 # but in 5.x, "-v" is verbose (and "-V" is --version)
 		elasticsearch -v; \
 	fi
-ENV PATH /usr/share/elasticsearch/bin:$PATH
-
-WORKDIR /usr/share/elasticsearch
-
 RUN set -ex \
 	&& for path in \
 		./data \
@@ -76,6 +75,7 @@ RUN apk --no-cache add wget \
  && wget -qO /usr/local/bin/go-elastic-health https://github.com/qnib/go-elastic-health/releases/download/v1.0.0/go-elastic-health_Linux \
  && chmod +x /usr/local/bin/go-elastic-health
 ENV ES_DATA=true \
+    ES_HOME=/usr/share/elasticsearch \
     ES_MASTER=true \
     ES_NET_HOST=0.0.0.0 \
     ES_MLOCKALL=true \
@@ -92,7 +92,7 @@ COPY opt/qnib/elasticsearch/bin/* /opt/qnib/elasticsearch/bin/
 COPY opt/qnib/entry/* /opt/qnib/entry/
 COPY usr/share/elasticsearch/config/elasticsearch.yml \
      usr/share/elasticsearch/config/log4j2.properties \
-     /usr/share/elasticsearch/config/
+     /config/
 RUN wget -qO /usr/local/bin/gosu https://github.com/tianon/gosu/releases/download/1.10/gosu-amd64 \
- && chmod +x /usr/local/bin/gosu 
+ && chmod +x /usr/local/bin/gosu
 RUN echo "gosu elasticsearch elasticsearch" >> /root/.bash_history
