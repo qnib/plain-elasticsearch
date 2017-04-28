@@ -79,6 +79,7 @@ ENV ES_DATA=true \
     ES_MASTER=true \
     ES_NET_HOST=0.0.0.0 \
     ES_MLOCKALL=true \
+    ES_PUBLISH_IFACE=eth0 \
     ES_HEAP_MAX=256m \
     ES_HEAP_MIN=256m \
     ENTRY_USER=elasticsearch

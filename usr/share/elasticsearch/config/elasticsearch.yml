@@ -6,5 +6,6 @@ node.data: ES_DATA_NODE
 http.cors.allow-origin: "/.*/"
 http.cors.enabled: true
 #discovery.zen.ping.unicast.hosts: localhost
-#network.host: _local_
+network.bind_host: 0.0.0.0
+#network.publish_host: _local_
 
