@@ -5,3 +5,6 @@ node.master: ES_MASTER_NODE
 node.data: ES_DATA_NODE
 http.cors.allow-origin: "/.*/"
 http.cors.enabled: true
+#discovery.zen.ping.unicast.hosts: localhost
+#network.host: _local_
+
