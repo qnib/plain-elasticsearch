@@ -1,7 +1,7 @@
 version: '3'
 services:
   master:
-    image: qnib/plain-elasticsearch
+    image: qnib/plain-elasticsearch:1.7.6
     ports:
       - "9200:9200"
       - "9300:9300"
@@ -22,4 +22,3 @@ services:
       ES_HEAP_MIN: "512m"
       ES_NODE_MASTER: "true"
       ES_NODE_DATA: "true"
-  
