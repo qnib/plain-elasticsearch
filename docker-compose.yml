@@ -6,12 +6,6 @@ services:
       - "9200:9200"
       - "9300:9300"
     deploy:
-      resources:
-        # Only one master for now
-        replicas: 1
-        limits:
-          cpus: '1'
-          memory: 768M
       update_config:
         parallelism: 1
         delay: 15s
