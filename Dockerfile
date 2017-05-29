@@ -72,7 +72,7 @@ HEALTHCHECK --interval=2s --retries=300 --timeout=1s \
 CMD ["elasticsearch"]
 VOLUME ["/usr/share/elasticsearch/logs", "/usr/share/elasticsearch/data/"]
 COPY opt/qnib/elasticsearch/bin/* /opt/qnib/elasticsearch/bin/
-COPY opt/qnib/entry/* /opt/qnib/entry/
+COPY opt/entry/* /opt/entry/
 COPY usr/share/elasticsearch/config/elasticsearch.yml \
      usr/share/elasticsearch/config/log4j2.properties \
      /usr/share/elasticsearch/config/
