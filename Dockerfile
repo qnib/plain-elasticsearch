@@ -66,13 +66,10 @@ ENV ES_DATA=true \
     ES_HEAP_MIN=256m \
     ENTRY_USER=elasticsearch
 COPY opt/qnib/elasticsearch/index-registration/settings/*.json /opt/qnib/elasticsearch/index-registration/settings/
-COPY wait.sh /usr/local/bin/
-HEALTHCHECK --interval=2s --retries=300 --timeout=1s \
-  CMD /usr/local/bin/go-elastic-health
 CMD ["elasticsearch"]
 VOLUME ["/usr/share/elasticsearch/logs", "/usr/share/elasticsearch/data/"]
-COPY opt/qnib/elasticsearch/bin/* /opt/qnib/elasticsearch/bin/
 COPY opt/entry/* /opt/entry/
+COPY opt/healthchecks/*.sh /opt/healthchecks/
 COPY usr/share/elasticsearch/config/elasticsearch.yml \
      usr/share/elasticsearch/config/log4j2.properties \
      /usr/share/elasticsearch/config/
