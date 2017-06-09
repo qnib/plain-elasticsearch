@@ -23,8 +23,8 @@ RUN set -x \
  && apt-get install -y --no-install-recommends apt-transport-https && rm -rf /var/lib/apt/lists/* \
  && echo 'deb https://artifacts.elastic.co/packages/5.x/apt stable main' > /etc/apt/sources.list.d/elasticsearch.list
 
-ENV ELASTICSEARCH_VERSION 5.4.0
-ENV ELASTICSEARCH_DEB_VERSION 5.4.0
+ENV ELASTICSEARCH_VERSION 5.4.1
+ENV ELASTICSEARCH_DEB_VERSION 5.4.1
 
 RUN set -x \
 	\
