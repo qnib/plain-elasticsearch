@@ -23,8 +23,9 @@ RUN set -x \
  && apt-get install -y --no-install-recommends apt-transport-https && rm -rf /var/lib/apt/lists/* \
  && echo 'deb https://artifacts.elastic.co/packages/5.x/apt stable main' > /etc/apt/sources.list.d/elasticsearch.list
 
-ENV ELASTICSEARCH_VERSION 5.4.1
-ENV ELASTICSEARCH_DEB_VERSION 5.4.1
+ARG ELASTICSEARCH_VERSION=5.5.1
+ARG ELASTICSEARCH_DEB_VERSION=5.5.1
+ENV ES_JAVA_OPTS="-Dlog4j2.disable.jmx=true"
 
 RUN set -x \
 	\

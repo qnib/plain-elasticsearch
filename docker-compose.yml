@@ -1,19 +1,12 @@
 version: '3'
 services:
   master:
-    image: qnib/plain-elasticsearch
+    image: qnib/plain-elasticsearch:5.5.1
     ports:
       - "9200:9200"
       - "9300:9300"
-    deploy:
-      update_config:
-        parallelism: 1
-        delay: 15s
-      restart_policy:
-        condition: on-failure
     environment:
       ES_HEAP_MAX: "512m"
       ES_HEAP_MIN: "512m"
       ES_NODE_MASTER: "true"
       ES_NODE_DATA: "true"
-  
