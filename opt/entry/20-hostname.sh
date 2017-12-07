@@ -11,5 +11,5 @@ if [[ -z ${ES_NODE_NAME} ]];then
       ES_NODE_NAME=$(hostname)
   fi
 fi
-echo ">> sed -i '' -e \"s/node.name: .*/node.name: ${ES_NODE_NAME}/\" /usr/share/elasticsearch/config/elasticsearch.yml"
-sed -i'' -e "s/node.name:.*/node.name: ${ES_NODE_NAME}/" /usr/share/elasticsearch/config/elasticsearch.yml
+echo ">> sed -i '' -e \"s/node.name: .*/node.name: ${ES_NODE_NAME}/\" /etc/elasticsearch/elasticsearch.yml"
+sed -i'' -e "s/node.name:.*/node.name: ${ES_NODE_NAME}/" /etc/elasticsearch/elasticsearch.yml

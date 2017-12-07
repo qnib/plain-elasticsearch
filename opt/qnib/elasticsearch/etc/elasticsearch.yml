@@ -28,11 +28,11 @@
 #
 # Path to directory where to store the data (separate multiple locations by comma):
 #
-path.data: /usr/share/elasticsearch/data
+path.data: /var/lib/elasticsearch
 #
 # Path to log files:
 #
-path.logs: /usr/share/elasticsearch/logs
+path.logs: /var/log/elasticsearch
 #
 # Path for snapshots
 #path.repo:

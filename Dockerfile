@@ -21,10 +21,10 @@ RUN set -x \
  && apt-get update \
  && apt-get install -y curl nmap jq vim sed \
  && apt-get install -y --no-install-recommends apt-transport-https && rm -rf /var/lib/apt/lists/* \
- && echo 'deb https://artifacts.elastic.co/packages/5.x/apt stable main' > /etc/apt/sources.list.d/elasticsearch.list
+ && echo 'deb https://artifacts.elastic.co/packages/6.x/apt stable main' > /etc/apt/sources.list.d/elasticsearch.list
 
-ARG ELASTICSEARCH_VERSION=5.5.1
-ARG ELASTICSEARCH_DEB_VERSION=5.5.1
+ARG ELASTICSEARCH_VERSION=6.0.1
+ARG ELASTICSEARCH_DEB_VERSION=6.0.1
 ENV ES_JAVA_OPTS="-Dlog4j2.disable.jmx=true"
 
 RUN set -x \
@@ -39,7 +39,7 @@ RUN set -x \
 
 ENV PATH /usr/share/elasticsearch/bin:$PATH
 
-WORKDIR /usr/share/elasticsearch
+WORKDIR /etc/elasticsearch
 
 RUN set -ex \
 	&& for path in \
@@ -68,10 +68,10 @@ ENV ES_DATA=true \
     ENTRY_USER=elasticsearch
 COPY opt/qnib/elasticsearch/index-registration/settings/*.json /opt/qnib/elasticsearch/index-registration/settings/
 CMD ["elasticsearch"]
-VOLUME ["/usr/share/elasticsearch/logs", "/usr/share/elasticsearch/data/"]
+VOLUME ["/var/lib/elasticsearch", "/var/log/elasticsearch"]
 COPY opt/entry/* /opt/entry/
 COPY opt/healthchecks/*.sh /opt/healthchecks/
-COPY usr/share/elasticsearch/config/elasticsearch.yml \
-     usr/share/elasticsearch/config/log4j2.properties \
-     /usr/share/elasticsearch/config/
+COPY opt/qnib/elasticsearch/etc/elasticsearch.yml \
+     opt/qnib/elasticsearch/etc/log4j2.properties \
+     /etc/elasticsearch/
 RUN echo "gosu elasticsearch elasticsearch" >> /root/.bash_history
