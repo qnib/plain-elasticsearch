@@ -40,4 +40,4 @@ services:
       ES_HEAP_MIN: "256m"
       ES_NODE_MASTER: "false"
       ES_NODE_DATA: "true"
-      ES_UNICAST_HOSTS: "es_master"
+      ES_UNICAST_HOSTS: "tasks.master"
