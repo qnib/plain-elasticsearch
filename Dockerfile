@@ -59,6 +59,7 @@ RUN apt-get update \
  && chmod +x /usr/local/bin/go-elastic-health \
  && apt-get purge -y wget \
  && rm -rf /var/lib/apt/lists/*
+RUN elasticsearch-plugin install -b repository-s3
 ENV ES_DATA=true \
     ES_MASTER=true \
     ES_NET_HOST=0.0.0.0 \
